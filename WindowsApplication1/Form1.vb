@@ -65,20 +65,15 @@ Public Class Form1
             ipEXT = wc.DownloadString("http://icanhazip.com")
             Exit Try
         Catch ex As Exception
-            'MsgBox(ex.Message.ToString)
-            'wc.Dispose()
             Return "0.0.0.0"
         End Try
-        'wc.Dispose()
         Return ipEXT
     End Function
     Private Sub IpAddressChecker()
-        'Dim ipAddress As String
         Dim ipArray As String()
 
         While True
             Threading.Thread.Sleep(timeout)
-            'ipAddress =
             ipArray = GetIPAddress().Split(".")
             ' MsgBox(ipRange(0) + "." + ipRange(1))
             If ipArray(0) = ipRange(0) And ipArray(1) = ipRange(1) Then
