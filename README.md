@@ -12,11 +12,19 @@ subsuquent warnings may result in academic reprocussions or legal issues (they s
 To use this program:
 
 run in visual studio, 
-set ip range of your campus 131.252 for Portland State
+
+set ip range of your campus
+
+131.252 for Portland State
+
 run torrent program
+
 find service name, ex: utorrent
+
 enter it in box.
+
 connect to campus wifi/internet (make sure you are not sharing for test)
+
 click test.
 
 if you recieve warning and torrent/filesharing program was killed, save settings.
