@@ -75,7 +75,6 @@ Public Class Form1
         While True
             Threading.Thread.Sleep(timeout)
             ipArray = GetIPAddress().Split(".")
-            ' MsgBox(ipRange(0) + "." + ipRange(1))
             If ipArray(0) = ipRange(0) And ipArray(1) = ipRange(1) Then
                 KillFileSharing()
             End If
@@ -135,7 +134,6 @@ Public Class Form1
     Private Sub GetSettings()
         timeoutString = GetSetting("TestApp", "settings", "timeout")
         programName = GetSetting("TestApp", "settings", "program name")
-        ' Dim ipRangeTemp As String =
         ipRange = GetSetting("TestApp", "settings", "ipPrefix").Split(".")
     End Sub
     Private Sub SaveAndUpdateSettings()
@@ -148,7 +146,6 @@ Public Class Form1
     End Sub
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         wasKilled = False
-        Dim wc As New WebClient
         Dim ipArray = GetIPAddress().Split(".")
 
         KillFileSharing()
