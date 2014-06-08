@@ -184,6 +184,12 @@ Public Class Form1
 
     Private Sub Install_Click(sender As Object, e As EventArgs) Handles Install.Click
         Dim exePathAndName As String = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
+        If exePathAndName.Split(".").Length > 2 Then
+            'MsgBox("running in visual studio")
+            exePathAndName = exePathAndName.Split(".")(0) + "." + exePathAndName.Split(".")(2)
+            'MsgBox(exePathAndName)
+        End If
+
         Dim appData As String = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
         Dim installPath As String = appData + "\DMCA Preventer"
         Dim filePathAndName As String = installPath + "\DMCA.exe"
