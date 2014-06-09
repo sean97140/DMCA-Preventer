@@ -307,7 +307,7 @@ Public Class Main
             If ipRangeToASN.ContainsKey(testString) Then
                 ' Write value of the key.
                 Dim num As Integer = ipRangeToASN.Item(testString)
-                MsgBox(num.ToString)
+                MsgBox(testString + " AS" + num.ToString)
             End If
 
         Next
