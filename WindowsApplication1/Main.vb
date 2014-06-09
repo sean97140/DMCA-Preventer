@@ -35,6 +35,7 @@ Public Class Main
         End If
     End Sub
     Private Sub LoadASNTable()
+        'http://quaxio.com/bgp/ much credit deserved for finding this method
         Dim FILE_NAME As String = "data-raw-table.txt"
         Dim objReader
         Try
@@ -65,7 +66,7 @@ Public Class Main
             ipRangeToASN.Add(ipRange, asn)
 
         Loop
-        
+
     End Sub
     Private Sub UpdateUserControls()
         If Not firstRun Then
@@ -280,6 +281,9 @@ Public Class Main
     End Sub
 
     Private Sub GetASN_Click(sender As Object, e As EventArgs) Handles GetASN.Click
+        'http://www.unixwiz.net/techtips/netmask-ref.html
+        'http://quaxio.com/bgp/ much credit deserved for finding this method
+
         Dim test As String = GetIPAddress()
         Dim test1 As String() = test.Split(".")
 
