@@ -12,6 +12,7 @@ Public Class Main
     Dim timeout As Integer
     Dim timeoutString As String
     Dim ipRange() As String
+    Dim installed As Boolean = False
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -24,6 +25,7 @@ Public Class Main
             MsgBox("Disclaimer: This program is designed for PSU main campus WiFi and VPN. This program will not work on many of the dorm's internet. The author assumes no liability from DMCA violations recieved while using this program. This program is to be used as a backup to manually checking if your file sharing program is running before connecting to campus internet/vpn.")
             MsgBox("Please specify the name of your torrent program")
             firstRun = True
+            UpdateUserControls()
         Else
             UpdateUserControls()
             SetTimeout()
@@ -31,14 +33,20 @@ Public Class Main
         End If
     End Sub
     Private Sub UpdateUserControls()
-        UserProgName.Text = programName
-        CheckFrequencySec.Value = SetValue(timeoutString)
-        userIPrange0.Text = ipRange(0)
-        userIPrange1.Text = ipRange(1)
-
+        If Not firstRun Then
+            UserProgName.Text = programName
+            CheckFrequencySec.Value = SetValue(timeoutString)
+            userIPrange0.Text = ipRange(0)
+            userIPrange1.Text = ipRange(1)
+            Install.Enabled = Not installed
+            Test.Enabled = True
+        Else
+            Test.Enabled = False
+        End If
     End Sub
     Private Sub SetTimeout()
         timeout = CheckFrequencySec.Value * 1000
+        timeoutString = CheckFrequencySec.Value.ToString
     End Sub
     Public Shared Function SetValue(timeoutString As String) As Integer
         Return Convert.ToInt32(timeoutString)
@@ -51,12 +59,16 @@ Public Class Main
         StartBtn.Enabled = False
     End Sub
     Private Sub StopCheckerThread()
-        If Not firstRun Then
+        Try
             myThread.Abort()
             StatusLabel.Text = "Status: not running"
             StartBtn.Enabled = True
             Refresh()
-        End If
+        Catch ex As Exception
+            'do nothing - temp hack to fix bug
+        End Try
+        
+
     End Sub
     Private Function GetIPAddress() As String
         Dim wc As New WebClient
@@ -130,18 +142,27 @@ Public Class Main
         Else
 
             SaveAndUpdateSettings()
+            firstRun = False
+            UpdateUserControls()
 
             MsgBox("Setting saved, please launch your program and use the test button")
             StopCheckerThread()
         End If
     End Sub
     Private Sub GetSettings()
+        If GetSetting("DMCA Preventer", "settings", "installed") = "True" Then
+            installed = True
+        Else
+            installed = False
+        End If
+
         timeoutString = GetSetting("DMCA Preventer", "settings", "timeout")
         programName = GetSetting("DMCA Preventer", "settings", "program name")
         ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
     End Sub
     Private Sub SaveAndUpdateSettings()
         SaveSetting("DMCA Preventer", "settings", "program name", UserProgName.Text)
+        SaveSetting("DMCA Preventer", "settings", "installed", installed.ToString)
         SaveSetting("DMCA Preventer", "settings", "timeout", CheckFrequencySec.Value.ToString)
         SaveSetting("DMCA Preventer", "settings", "ipPrefix", userIPrange0.Text + "." + userIPrange1.Text)
         ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
@@ -205,7 +226,12 @@ Public Class Main
             My.Computer.FileSystem.CreateDirectory(installPath)
             My.Computer.FileSystem.CopyFile(exePathAndName, filePathAndName, overwrite:=True)
             My.Computer.Registry.SetValue(curUserRegRun, RegKeyName, filePathAndName)
-            MsgBox("Install Sucessful")
+            installed = True
+            SaveAndUpdateSettings()
+            MsgBox("Install Sucessful, current instance will now close and installed copy will be executed")
+            System.Diagnostics.Process.Start(filePathAndName)
+            End
+
         Catch ex As Exception
             'Debuging for now, proper exception handling needed
             MsgBox(ex.ToString)
