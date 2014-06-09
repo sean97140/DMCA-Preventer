@@ -15,6 +15,7 @@ Public Class Main
     Dim installed As Boolean = False
 
     Dim ipRangeToASN As New Dictionary(Of String, Integer)
+    Dim ASNToOwner As New Dictionary(Of Integer, String)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForFirstRunUpdateAndStartThread()
@@ -38,15 +39,29 @@ Public Class Main
         'http://quaxio.com/bgp/ much credit deserved for finding this method
 
         Dim FILE_NAME As String = "data-raw-table.txt"
+        Dim FILE_NAME1 As String = "data-used-autnums.txt"
+        '
         Dim objReader
+        Dim objReader1
 
         Try
             objReader = New System.IO.StreamReader(FILE_NAME)
+
         Catch ex As Exception
             '    StatusLabel.Text = "Downloading ASN lookup table"
             MsgBox("No ASN data file found, please wait while it is downloaded. File size 10mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-raw-table", "data-raw-table.txt")
             objReader = New System.IO.StreamReader(FILE_NAME)
+        End Try
+
+        Try
+            objReader1 = New System.IO.StreamReader(FILE_NAME1)
+
+        Catch ex As Exception
+            '    StatusLabel.Text = "Downloading ASN lookup table"
+            MsgBox("No ASN to Owner data file found, please wait while it is downloaded. File size 2mb")
+            My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-used-autnums", "data-used-autnums.txt")
+            objReader1 = New System.IO.StreamReader(FILE_NAME1)
         End Try
 
         Dim TextLine As String = ""
@@ -61,6 +76,24 @@ Public Class Main
             ipRangeToASN.Add(ipRange, asn)
         Loop
 
+        Dim ownerParts As String()
+        Dim owner As String = ""
+
+        Try
+            Do While objReader1.Peek() <> -1
+                owner = ""
+                TextLine = objReader1.ReadLine().ToString().Trim()
+                ownerParts = TextLine.Split()
+                For i As Integer = 1 To ownerParts.Length - 1
+                    owner = owner + " " + ownerParts(i)
+                Next
+
+                asn = SetValue(TextLine.Split()(0))
+                ASNToOwner.Add(asn, owner.Trim())
+            Loop
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
     End Sub
     Private Sub UpdateUserControls()
         If Not firstRun Then
@@ -306,7 +339,7 @@ Public Class Main
             If ipRangeToASN.ContainsKey(testString) Then
                 ' Write value of the key.
                 Dim num As Integer = ipRangeToASN.Item(testString)
-                MsgBox(testString + " AS" + num.ToString)
+                MsgBox(testString + " AS" + num.ToString + " " + ASNToOwner.Item(num))
                 found = True
 
             End If
