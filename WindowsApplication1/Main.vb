@@ -36,12 +36,15 @@ Public Class Main
     End Sub
     Private Sub LoadASNTable()
         'http://quaxio.com/bgp/ much credit deserved for finding this method
+
         Dim FILE_NAME As String = "data-raw-table.txt"
         Dim objReader
+
         Try
             objReader = New System.IO.StreamReader(FILE_NAME)
         Catch ex As Exception
-            StatusLabel.Text = "Downloading ASN lookup table"
+            '    StatusLabel.Text = "Downloading ASN lookup table"
+            MsgBox("No ASN data file found, please wait while it is downloaded. File size 10mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-raw-table", "data-raw-table.txt")
             objReader = New System.IO.StreamReader(FILE_NAME)
         End Try
@@ -49,22 +52,13 @@ Public Class Main
         Dim TextLine As String = ""
         Dim ipRange As String
         Dim asn As Integer = -1
-        StatusLabel.Text = "Loading ASN lookup table"
-        Do While objReader.Peek() <> -1
+        'StatusLabel.Text = "Loading ASN lookup table"
 
+        Do While objReader.Peek() <> -1
             TextLine = objReader.ReadLine()
             ipRange = TextLine.Split()(0)
-
             asn = SetValue(TextLine.Split()(1))
-            If asn = -1 Then
-                Dim i As Integer = 1
-                'MsgBox("Fail")
-                While asn = -1
-                    asn = SetValue(TextLine.Split()(i))
-                End While
-            End If
             ipRangeToASN.Add(ipRange, asn)
-
         Loop
 
     End Sub
@@ -286,6 +280,7 @@ Public Class Main
 
         Dim test As String = GetIPAddress()
         Dim test1 As String() = test.Split(".")
+        Dim found As Boolean = False
 
         For maskBits As Integer = 0 To 32 Step 1
             If maskBits <= 8 Then
@@ -312,10 +307,14 @@ Public Class Main
                 ' Write value of the key.
                 Dim num As Integer = ipRangeToASN.Item(testString)
                 MsgBox(testString + " AS" + num.ToString)
+                found = True
+
             End If
 
         Next
-
+        If Not found Then
+            MsgBox("Lookup failed, please check if you are connected to the internet.")
+        End If
 
     End Sub
 End Class
