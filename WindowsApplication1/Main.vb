@@ -16,6 +16,7 @@ Public Class Main
 
     Dim ipRangeToASN As New Dictionary(Of String, Integer)
     Dim ASNToOwner As New Dictionary(Of Integer, String)
+    Dim OwnerToASNs As New Dictionary(Of String, List(Of Integer))
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForFirstRunUpdateAndStartThread()
@@ -94,6 +95,23 @@ Public Class Main
         Catch ex As Exception
             MsgBox(ex.ToString)
         End Try
+        objReader.Close()
+        objReader1.Close()
+
+        For Each i As Integer In ASNToOwner.Keys()
+            Dim owner1 As String = ASNToOwner.Item(i)
+            If OwnerToASNs.ContainsKey(owner1) Then
+                Dim asnList As List(Of Integer) = OwnerToASNs.Item(owner1)
+                asnList.Add(i)
+            Else
+                Dim asnList As New List(Of Integer)
+                asnList.Add(i)
+                OwnerToASNs.Add(owner1, asnList)
+            End If
+
+        Next
+        MsgBox("done")
+
     End Sub
     Private Sub UpdateUserControls()
         If Not firstRun Then
