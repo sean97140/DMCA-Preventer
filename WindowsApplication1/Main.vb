@@ -75,7 +75,7 @@ Public Class Main
         Dim ipExternal As String
 
         Try
-            ipExternal = wc.DownloadString("http://icanhazip.com")
+            ipExternal = wc.DownloadString("http://ipv4.icanhazip.com")
             Exit Try
         Catch ex As Exception
             Return "0.0.0.0"
