@@ -44,7 +44,6 @@ Partial Class Form1
         Me.Button5 = New System.Windows.Forms.Button()
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.Install = New System.Windows.Forms.Button()
-        Me.InstallLocation = New System.Windows.Forms.FolderBrowserDialog()
         Me.ContextMenuStrip1.SuspendLayout()
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -217,13 +216,6 @@ Partial Class Form1
         Me.Install.Text = "Install"
         Me.Install.UseVisualStyleBackColor = True
         '
-        'InstallLocation
-        '
-        Me.InstallLocation.Description = "Please select a location to install. A folder will be created under the location " & _
-    "you select."
-        Me.InstallLocation.RootFolder = System.Environment.SpecialFolder.MyComputer
-        Me.InstallLocation.SelectedPath = "C:\Program Files (x86)"
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -275,6 +267,5 @@ Partial Class Form1
     Friend WithEvents Button5 As System.Windows.Forms.Button
     Friend WithEvents NotifyIcon1 As System.Windows.Forms.NotifyIcon
     Friend WithEvents Install As System.Windows.Forms.Button
-    Friend WithEvents InstallLocation As System.Windows.Forms.FolderBrowserDialog
 
 End Class

@@ -78,6 +78,8 @@ Public Class Form1
             If ipArray(0) = ipRange(0) And ipArray(1) = ipRange(1) Then
                 KillFileSharing()
             End If
+
+            'Garbage collector is lazy, and this program will slowly consume ALOT of memory before it kicks in (if it does)
             GC.Collect()
         End While
     End Sub
@@ -132,15 +134,15 @@ Public Class Form1
         End If
     End Sub
     Private Sub GetSettings()
-        timeoutString = GetSetting("TestApp", "settings", "timeout")
-        programName = GetSetting("TestApp", "settings", "program name")
-        ipRange = GetSetting("TestApp", "settings", "ipPrefix").Split(".")
+        timeoutString = GetSetting("DMCA Preventer", "settings", "timeout")
+        programName = GetSetting("DMCA Preventer", "settings", "program name")
+        ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
     End Sub
     Private Sub SaveAndUpdateSettings()
-        SaveSetting("TestApp", "settings", "program name", TextBox1.Text)
-        SaveSetting("TestApp", "settings", "timeout", NumericUpDown1.Value.ToString)
-        SaveSetting("TestApp", "settings", "ipPrefix", userIPrange0.Text + "." + userIPrange1.Text)
-        ipRange = GetSetting("TestApp", "settings", "ipPrefix").Split(".")
+        SaveSetting("DMCA Preventer", "settings", "program name", TextBox1.Text)
+        SaveSetting("DMCA Preventer", "settings", "timeout", NumericUpDown1.Value.ToString)
+        SaveSetting("DMCA Preventer", "settings", "ipPrefix", userIPrange0.Text + "." + userIPrange1.Text)
+        ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
         programName = TextBox1.Text
         SetTimeout()
     End Sub
@@ -184,10 +186,11 @@ Public Class Form1
 
     Private Sub Install_Click(sender As Object, e As EventArgs) Handles Install.Click
         Dim exePathAndName As String = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
+
+        'catches when the program is running in visual studio where it will incorrectly use the progname.vshost.exe
+        'rather than the progname.exe
         If exePathAndName.Split(".").Length > 2 Then
-            'MsgBox("running in visual studio")
             exePathAndName = exePathAndName.Split(".")(0) + "." + exePathAndName.Split(".")(2)
-            'MsgBox(exePathAndName)
         End If
 
         Dim appData As String = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
