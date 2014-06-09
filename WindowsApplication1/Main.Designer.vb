@@ -44,6 +44,7 @@ Partial Class Main
         Me.GetIpRng = New System.Windows.Forms.Button()
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.Install = New System.Windows.Forms.Button()
+        Me.GetASN = New System.Windows.Forms.Button()
         Me.ContextMenuStrip1.SuspendLayout()
         CType(Me.CheckFrequencySec, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -216,12 +217,22 @@ Partial Class Main
         Me.Install.Text = "Install"
         Me.Install.UseVisualStyleBackColor = True
         '
+        'GetASN
+        '
+        Me.GetASN.Location = New System.Drawing.Point(15, 148)
+        Me.GetASN.Name = "GetASN"
+        Me.GetASN.Size = New System.Drawing.Size(75, 23)
+        Me.GetASN.TabIndex = 17
+        Me.GetASN.Text = "Get ASN"
+        Me.GetASN.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(284, 262)
         Me.ControlBox = False
+        Me.Controls.Add(Me.GetASN)
         Me.Controls.Add(Me.Install)
         Me.Controls.Add(Me.GetIpRng)
         Me.Controls.Add(Me.Label6)
@@ -267,5 +278,6 @@ Partial Class Main
     Friend WithEvents GetIpRng As System.Windows.Forms.Button
     Friend WithEvents NotifyIcon1 As System.Windows.Forms.NotifyIcon
     Friend WithEvents Install As System.Windows.Forms.Button
+    Friend WithEvents GetASN As System.Windows.Forms.Button
 
 End Class

@@ -1,7 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Campus DMCA preventer", "WindowsApplication1\Campus DMCA preventer.vbproj", "{2001479A-FF50-4F28-9447-D690A67BB255}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{87139547-B460-43BE-B0E6-A931A8BAB296}"
+	ProjectSection(SolutionItems) = preProject
+		data-raw-table.txt = data-raw-table.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

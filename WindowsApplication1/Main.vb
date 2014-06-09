@@ -14,6 +14,7 @@ Public Class Main
     Dim ipRange() As String
     Dim installed As Boolean = False
 
+    Dim ipRangeToASN As New Dictionary(Of String, Integer)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForFirstRunUpdateAndStartThread()
@@ -27,10 +28,44 @@ Public Class Main
             firstRun = True
             UpdateUserControls()
         Else
+            LoadASNTable()
             UpdateUserControls()
             SetTimeout()
             StartCheckerThread()
         End If
+    End Sub
+    Private Sub LoadASNTable()
+        Dim FILE_NAME As String = "data-raw-table.txt"
+        Dim objReader
+        Try
+            objReader = New System.IO.StreamReader(FILE_NAME)
+        Catch ex As Exception
+            StatusLabel.Text = "Downloading ASN lookup table"
+            My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-raw-table", "data-raw-table.txt")
+            objReader = New System.IO.StreamReader(FILE_NAME)
+        End Try
+
+        Dim TextLine As String = ""
+        Dim ipRange As String
+        Dim asn As Integer = -1
+        StatusLabel.Text = "Loading ASN lookup table"
+        Do While objReader.Peek() <> -1
+
+            TextLine = objReader.ReadLine()
+            ipRange = TextLine.Split()(0)
+
+            asn = SetValue(TextLine.Split()(1))
+            If asn = -1 Then
+                Dim i As Integer = 1
+                'MsgBox("Fail")
+                While asn = -1
+                    asn = SetValue(TextLine.Split()(i))
+                End While
+            End If
+            ipRangeToASN.Add(ipRange, asn)
+
+        Loop
+        
     End Sub
     Private Sub UpdateUserControls()
         If Not firstRun Then
@@ -49,7 +84,12 @@ Public Class Main
         timeoutString = CheckFrequencySec.Value.ToString
     End Sub
     Public Shared Function SetValue(timeoutString As String) As Integer
-        Return Convert.ToInt32(timeoutString)
+        Try
+            Return Convert.ToInt32(timeoutString)
+        Catch ex As Exception
+            Return -1
+        End Try
+
     End Function
 
     Private Sub StartCheckerThread()
@@ -236,6 +276,42 @@ Public Class Main
             'Debuging for now, proper exception handling needed
             MsgBox(ex.ToString)
         End Try
+
+    End Sub
+
+    Private Sub GetASN_Click(sender As Object, e As EventArgs) Handles GetASN.Click
+        Dim test As String = GetIPAddress()
+        Dim test1 As String() = test.Split(".")
+
+        For maskBits As Integer = 0 To 32 Step 1
+            If maskBits <= 8 Then
+                Dim firstPrefix As Integer = SetValue(test1(3))
+                firstPrefix = (firstPrefix >> maskBits) << maskBits
+                test1(3) = firstPrefix.ToString
+            ElseIf maskBits <= 16 Then
+                Dim secondPrefix As Integer = SetValue(test1(2))
+                secondPrefix = (secondPrefix >> maskBits - 8) << maskBits - 8
+                test1(2) = secondPrefix.ToString
+
+            ElseIf maskBits <= 24 Then
+                Dim thirdPrefix As Integer = SetValue(test1(1))
+                thirdPrefix = (thirdPrefix >> maskBits - 16) << maskBits - 16
+                test1(1) = thirdPrefix.ToString
+            ElseIf maskBits <= 32 Then
+                Dim fourthPrefix As Integer = SetValue(test1(0))
+                fourthPrefix = (fourthPrefix >> maskBits - 24) << maskBits - 24
+                test1(0) = fourthPrefix.ToString
+            End If
+            Dim testString As String = String.Join(".", test1) + "/" + (32 - maskBits).ToString()
+
+            If ipRangeToASN.ContainsKey(testString) Then
+                ' Write value of the key.
+                Dim num As Integer = ipRangeToASN.Item(testString)
+                MsgBox(num.ToString)
+            End If
+
+        Next
+
 
     End Sub
 End Class
