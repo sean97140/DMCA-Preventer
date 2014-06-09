@@ -4,7 +4,7 @@ Imports System.IO
 Imports System.Math
 
 
-Public Class Form1
+Public Class Main
     Dim myThread As System.Threading.Thread
     Dim firstRun As Boolean = False
     Dim programName As String
@@ -31,14 +31,14 @@ Public Class Form1
         End If
     End Sub
     Private Sub UpdateUserControls()
-        TextBox1.Text = programName
-        NumericUpDown1.Value = SetValue(timeoutString)
+        UserProgName.Text = programName
+        CheckFrequencySec.Value = SetValue(timeoutString)
         userIPrange0.Text = ipRange(0)
         userIPrange1.Text = ipRange(1)
 
     End Sub
     Private Sub SetTimeout()
-        timeout = NumericUpDown1.Value * 1000
+        timeout = CheckFrequencySec.Value * 1000
     End Sub
     Public Shared Function SetValue(timeoutString As String) As Integer
         Return Convert.ToInt32(timeoutString)
@@ -47,27 +47,29 @@ Public Class Form1
     Private Sub StartCheckerThread()
         myThread = New System.Threading.Thread(AddressOf IpAddressChecker)
         myThread.Start()
-        Label2.Text = "Status: running"
-        Button4.Enabled = False
+        StatusLabel.Text = "Status: running"
+        StartBtn.Enabled = False
     End Sub
     Private Sub StopCheckerThread()
         If Not firstRun Then
             myThread.Abort()
-            Label2.Text = "Status: not running"
-            Button4.Enabled = True
+            StatusLabel.Text = "Status: not running"
+            StartBtn.Enabled = True
             Refresh()
         End If
     End Sub
     Private Function GetIPAddress() As String
         Dim wc As New WebClient
-        Dim ipEXT As String
+        Dim ipExternal As String
+
         Try
-            ipEXT = wc.DownloadString("http://icanhazip.com")
+            ipExternal = wc.DownloadString("http://icanhazip.com")
             Exit Try
         Catch ex As Exception
             Return "0.0.0.0"
         End Try
-        Return ipEXT
+
+        Return ipExternal
     End Function
     Private Sub IpAddressChecker()
         Dim ipArray As String()
@@ -93,7 +95,7 @@ Public Class Form1
         ShowSettings()
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Hide_Click(sender As Object, e As EventArgs) Handles HideBtn.Click
         HideForm()
     End Sub
 
@@ -118,13 +120,13 @@ Public Class Form1
         ShowSettings()
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    Private Sub SaveBtn_Click(sender As Object, e As EventArgs) Handles SaveBtn.Click
         Dim txtinput As String()
-        txtinput = TextBox1.Text.Split(".")
+        txtinput = UserProgName.Text.Split(".")
 
         If txtinput.Length > 1 Then
             MsgBox("Please enter only the process name, not the .exe portion. Please check correction and resave.")
-            TextBox1.Text = txtinput(0)
+            UserProgName.Text = txtinput(0)
         Else
 
             SaveAndUpdateSettings()
@@ -139,14 +141,14 @@ Public Class Form1
         ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
     End Sub
     Private Sub SaveAndUpdateSettings()
-        SaveSetting("DMCA Preventer", "settings", "program name", TextBox1.Text)
-        SaveSetting("DMCA Preventer", "settings", "timeout", NumericUpDown1.Value.ToString)
+        SaveSetting("DMCA Preventer", "settings", "program name", UserProgName.Text)
+        SaveSetting("DMCA Preventer", "settings", "timeout", CheckFrequencySec.Value.ToString)
         SaveSetting("DMCA Preventer", "settings", "ipPrefix", userIPrange0.Text + "." + userIPrange1.Text)
         ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
-        programName = TextBox1.Text
+        programName = UserProgName.Text
         SetTimeout()
     End Sub
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+    Private Sub Test_Click(sender As Object, e As EventArgs) Handles Test.Click
         wasKilled = False
         Dim ipArray = GetIPAddress().Split(".")
 
@@ -161,13 +163,13 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+    Private Sub StartBtn_Click(sender As Object, e As EventArgs) Handles StartBtn.Click
         StartCheckerThread()
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+    Private Sub GetIpRange_Click(sender As Object, e As EventArgs) Handles GetIpRng.Click
         Dim temp As Integer = MsgBox("Are you on campus internet/vpn?", MsgBoxStyle.YesNo)
-        If temp = 6 Then
+        If temp = MsgBoxResult.Yes Then
             Dim ipArray() As String = GetIPAddress().Split(".")
             If ipArray(0) = 0 And ipArray(1) = 0 Then
                 MsgBox("Internet error, not connected, please verify connection")
@@ -180,7 +182,7 @@ Public Class Form1
         Else
             MsgBox("Please connect to campus internet and try again.")
         End If
-        
+
     End Sub
 
 
