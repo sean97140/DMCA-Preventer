@@ -46,7 +46,7 @@ Partial Class Main
         Me.Install = New System.Windows.Forms.Button()
         Me.GetASN = New System.Windows.Forms.Button()
         Me.WhiteOrBlackListBox = New System.Windows.Forms.ListBox()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.listTypeLabel = New System.Windows.Forms.Label()
         Me.AddASN = New System.Windows.Forms.Button()
         Me.DeleteASN = New System.Windows.Forms.Button()
         Me.WhiteListRadio = New System.Windows.Forms.RadioButton()
@@ -109,7 +109,7 @@ Partial Class Main
         '
         'Test
         '
-        Me.Test.Location = New System.Drawing.Point(104, 266)
+        Me.Test.Location = New System.Drawing.Point(98, 266)
         Me.Test.Name = "Test"
         Me.Test.Size = New System.Drawing.Size(75, 30)
         Me.Test.TabIndex = 5
@@ -118,7 +118,7 @@ Partial Class Main
         '
         'StartBtn
         '
-        Me.StartBtn.Location = New System.Drawing.Point(104, 302)
+        Me.StartBtn.Location = New System.Drawing.Point(98, 302)
         Me.StartBtn.Name = "StartBtn"
         Me.StartBtn.Size = New System.Drawing.Size(75, 30)
         Me.StartBtn.TabIndex = 6
@@ -216,7 +216,7 @@ Partial Class Main
         '
         'Install
         '
-        Me.Install.Location = New System.Drawing.Point(189, 266)
+        Me.Install.Location = New System.Drawing.Point(181, 266)
         Me.Install.Name = "Install"
         Me.Install.Size = New System.Drawing.Size(75, 30)
         Me.Install.TabIndex = 16
@@ -225,7 +225,7 @@ Partial Class Main
         '
         'GetASN
         '
-        Me.GetASN.Location = New System.Drawing.Point(104, 230)
+        Me.GetASN.Location = New System.Drawing.Point(98, 230)
         Me.GetASN.Name = "GetASN"
         Me.GetASN.Size = New System.Drawing.Size(75, 30)
         Me.GetASN.TabIndex = 17
@@ -240,14 +240,14 @@ Partial Class Main
         Me.WhiteOrBlackListBox.Size = New System.Drawing.Size(241, 134)
         Me.WhiteOrBlackListBox.TabIndex = 18
         '
-        'Label2
+        'listTypeLabel
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 74)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(71, 13)
-        Me.Label2.TabIndex = 19
-        Me.Label2.Text = "ASN Blacklist"
+        Me.listTypeLabel.AutoSize = True
+        Me.listTypeLabel.Location = New System.Drawing.Point(12, 74)
+        Me.listTypeLabel.Name = "listTypeLabel"
+        Me.listTypeLabel.Size = New System.Drawing.Size(71, 13)
+        Me.listTypeLabel.TabIndex = 19
+        Me.listTypeLabel.Text = "ASN Blacklist"
         '
         'AddASN
         '
@@ -260,7 +260,7 @@ Partial Class Main
         '
         'DeleteASN
         '
-        Me.DeleteASN.Location = New System.Drawing.Point(189, 230)
+        Me.DeleteASN.Location = New System.Drawing.Point(181, 230)
         Me.DeleteASN.Name = "DeleteASN"
         Me.DeleteASN.Size = New System.Drawing.Size(75, 30)
         Me.DeleteASN.TabIndex = 21
@@ -299,7 +299,7 @@ Partial Class Main
         Me.Controls.Add(Me.WhiteListRadio)
         Me.Controls.Add(Me.DeleteASN)
         Me.Controls.Add(Me.AddASN)
-        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.listTypeLabel)
         Me.Controls.Add(Me.WhiteOrBlackListBox)
         Me.Controls.Add(Me.GetASN)
         Me.Controls.Add(Me.Install)
@@ -349,7 +349,7 @@ Partial Class Main
     Friend WithEvents Install As System.Windows.Forms.Button
     Friend WithEvents GetASN As System.Windows.Forms.Button
     Friend WithEvents WhiteOrBlackListBox As System.Windows.Forms.ListBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents listTypeLabel As System.Windows.Forms.Label
     Friend WithEvents AddASN As System.Windows.Forms.Button
     Friend WithEvents DeleteASN As System.Windows.Forms.Button
     Friend WithEvents WhiteListRadio As System.Windows.Forms.RadioButton
