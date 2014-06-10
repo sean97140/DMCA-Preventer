@@ -154,7 +154,7 @@ Public Class Main
     End Function
 
     Private Sub StartCheckerThread()
-        myThread = New System.Threading.Thread(AddressOf IpAddressChecker)
+        myThread = New System.Threading.Thread(AddressOf ASNChecker)
         myThread.Start()
         StatusLabel.Text = "Status: running"
         StartBtn.Enabled = False
@@ -168,7 +168,7 @@ Public Class Main
         Catch ex As Exception
             'do nothing - temp hack to fix bug
         End Try
-        
+
 
     End Sub
     Private Function GetIPAddress() As String
@@ -194,6 +194,23 @@ Public Class Main
                 KillFileSharing()
             End If
 
+            'Garbage collector is lazy, and this program will slowly consume ALOT of memory before it kicks in (if it does)
+            GC.Collect()
+        End While
+    End Sub
+    Private Sub ASNChecker()
+        While True
+            Threading.Thread.Sleep(timeout)
+            Dim num As Integer = GetASNumber()
+            If isBlackList Then
+                If asnBlackWhiteList.Contains(num) Then
+                    KillFileSharing()
+                End If
+            Else
+                If Not asnBlackWhiteList.Contains(num) Then
+                    KillFileSharing()
+                End If
+            End If
             'Garbage collector is lazy, and this program will slowly consume ALOT of memory before it kicks in (if it does)
             GC.Collect()
         End While
@@ -364,14 +381,11 @@ Public Class Main
         End Try
 
     End Sub
-
-    Private Sub GetASN_Click(sender As Object, e As EventArgs) Handles GetASN.Click
-        'http://www.unixwiz.net/techtips/netmask-ref.html
-        'http://quaxio.com/bgp/ much credit deserved for finding this method
-
+    Private Function GetASNumber() As Integer
         Dim test As String = GetIPAddress()
         Dim test1 As String() = test.Split(".")
         Dim found As Boolean = False
+        Dim asnNum As Integer = -1
 
         For maskBits As Integer = 0 To 32 Step 1
             If maskBits <= 8 Then
@@ -396,27 +410,37 @@ Public Class Main
 
             If ipRangeToASN.ContainsKey(testString) Then
                 ' Write value of the key.
-                Dim num As Integer = ipRangeToASN.Item(testString)
-                Dim owner As String = ASNToOwner.Item(num)
-                MsgBox(testString + " AS" + num.ToString + " " + owner)
+                asnNum = ipRangeToASN.Item(testString)
+                'MsgBox(testString + " AS" + num.ToString + " " + owner)
                 found = True
-                Dim asnList As List(Of Integer) = OwnerToASNs.Item(owner)
-
-                Dim asnListString As String = ""
-                For i As Integer = 0 To asnList.Count() - 1 Step 1
-                    asnListString = (asnListString + " " + asnList.Item(i).ToString).Trim
-                    ListBox1.Items.Add(asnList.Item(i).ToString + " " + owner)
-                    asnBlackWhiteList.Add(asnList.Item(i))
-                Next
-
-                MsgBox("Other ASNs for: " + owner + " are: " + asnListString)
-
+                Exit For
+                'MsgBox("Other ASNs for: " + Owner + " are: " + asnListString)
+            Else
+                found = False
             End If
-
         Next
-        If Not found Then
-            MsgBox("Lookup failed, please check if you are connected to the internet.")
+        If found Then
+            Return asnNum
+        Else
+            Return -1
         End If
+        'Return -1
+    End Function
+    Private Sub GetASN_Click(sender As Object, e As EventArgs) Handles GetASN.Click
+        'http://www.unixwiz.net/techtips/netmask-ref.html
+        'http://quaxio.com/bgp/ much credit deserved for finding this method
+
+        Dim num As Integer = GetASNumber()
+
+        Dim owner As String = ASNToOwner.Item(num)
+        Dim asnList As List(Of Integer) = OwnerToASNs.Item(owner)
+
+        Dim asnListString As String = ""
+        For i As Integer = 0 To asnList.Count() - 1 Step 1
+            asnListString = (asnListString + " " + asnList.Item(i).ToString).Trim
+            ListBox1.Items.Add(asnList.Item(i).ToString + " " + owner)
+            asnBlackWhiteList.Add(asnList.Item(i))
+        Next
 
     End Sub
 
