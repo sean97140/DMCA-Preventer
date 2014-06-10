@@ -17,6 +17,8 @@ Public Class Main
     Dim ipRangeToASN As New Dictionary(Of String, Integer)
     Dim ASNToOwner As New Dictionary(Of Integer, String)
     Dim OwnerToASNs As New Dictionary(Of String, List(Of Integer))
+    Dim asnBlackWhiteList As New List(Of Integer)
+    Dim isBlackList As Boolean = True
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForFirstRunUpdateAndStartThread()
@@ -121,6 +123,19 @@ Public Class Main
             userIPrange1.Text = ipRange(1)
             Install.Enabled = Not installed
             Test.Enabled = True
+
+            If isBlackList Then
+                Label2.Text = "ASN Blacklist"
+                RadioButton2.Checked = True
+            Else
+                Label2.Text = "ASN Whitelist"
+                RadioButton1.Checked = True
+            End If
+
+            For i As Integer = 0 To asnBlackWhiteList.Count() - 1
+                Dim temp As String = asnBlackWhiteList.Item(i)
+                ListBox1.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
+            Next
         Else
             Test.Enabled = False
         End If
@@ -229,7 +244,8 @@ Public Class Main
 
             SaveAndUpdateSettings()
             firstRun = False
-            UpdateUserControls()
+
+            'UpdateUserControls()
 
             MsgBox("Setting saved, please launch your program and use the test button")
             StopCheckerThread()
@@ -242,16 +258,40 @@ Public Class Main
             installed = False
         End If
 
+        If GetSetting("DMCA Preventer", "settings", "BlackList") = "True" Then
+            isBlackList = True
+        Else
+            isBlackList = False
+        End If
+
         timeoutString = GetSetting("DMCA Preventer", "settings", "timeout")
         programName = GetSetting("DMCA Preventer", "settings", "program name")
         ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
+        Dim asnString As String() = GetSetting("DMCA Preventer", "settings", "asnBlackWhiteList").Split()
+
+        'asnBlackWhiteList.Add(SetValue(asnString.GetValue(0)))
+        For i As Integer = 0 To asnString.Count() - 1
+            asnBlackWhiteList.Add(SetValue(asnString.GetValue(i)))
+        Next
+
     End Sub
     Private Sub SaveAndUpdateSettings()
         SaveSetting("DMCA Preventer", "settings", "program name", UserProgName.Text)
         SaveSetting("DMCA Preventer", "settings", "installed", installed.ToString)
+        SaveSetting("DMCA Preventer", "settings", "BlackList", isBlackList.ToString)
         SaveSetting("DMCA Preventer", "settings", "timeout", CheckFrequencySec.Value.ToString)
         SaveSetting("DMCA Preventer", "settings", "ipPrefix", userIPrange0.Text + "." + userIPrange1.Text)
         ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
+
+        Dim asnString As String = ""
+
+        For i As Integer = 0 To asnBlackWhiteList.Count() - 1 Step 1
+            asnString = asnString + " " + asnBlackWhiteList.Item(i).ToString()
+        Next
+
+        SaveSetting("DMCA Preventer", "settings", "asnBlackWhiteList", asnString.Trim())
+
+
         programName = UserProgName.Text
         SetTimeout()
     End Sub
@@ -366,6 +406,7 @@ Public Class Main
                 For i As Integer = 0 To asnList.Count() - 1 Step 1
                     asnListString = (asnListString + " " + asnList.Item(i).ToString).Trim
                     ListBox1.Items.Add(asnList.Item(i).ToString + " " + owner)
+                    asnBlackWhiteList.Add(asnList.Item(i))
                 Next
 
                 MsgBox("Other ASNs for: " + owner + " are: " + asnListString)
@@ -380,12 +421,25 @@ Public Class Main
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        asnBlackWhiteList.Remove(ListBox1.SelectedItem.ToString.Split()(0))
         ListBox1.Items.Remove(ListBox1.SelectedItem)
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim temp As Integer = SetValue(InputBox("Please enter ASN"))
         ListBox1.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
+        asnBlackWhiteList.Add(temp)
+
+    End Sub
+
+    Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
+        Label2.Text = "ASN Whitelist"
+        isBlackList = False
+    End Sub
+
+    Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
+        Label2.Text = "ASN Blacklist"
+        isBlackList = True
     End Sub
 End Class
 
