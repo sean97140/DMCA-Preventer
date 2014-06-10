@@ -26,14 +26,14 @@ Public Class Main
 
     Private Sub CheckForFirstRunUpdateAndStartThread()
         GetSettings()
+        LoadASNTables()
 
         If programName = "" Then
-            MsgBox("Disclaimer: This program is designed for PSU main campus WiFi and VPN. This program will not work on many of the dorm's internet. The author assumes no liability from DMCA violations recieved while using this program. This program is to be used as a backup to manually checking if your file sharing program is running before connecting to campus internet/vpn.")
-            MsgBox("Please specify the name of your torrent program")
+            MsgBox("Disclaimer: This program is for backup puproses only and is not ment to replace manually checking if your filesharing program is running")
+            'MsgBox("Please specify the name of your filesharing program")
             isFirstRun = True
             UpdateUserControls()
         Else
-            LoadASNTables()
             UpdateUserControls()
             SetTimeout()
             StartCheckerThread()
@@ -140,10 +140,12 @@ Public Class Main
             End If
 
             For i As Integer = 0 To asnBlackWhiteList.Count() - 1
-                Dim temp As String = asnBlackWhiteList.Item(i)
-                WhiteOrBlackListBox.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
+                Dim asnNum As Integer = asnBlackWhiteList.Item(i)
+                Dim asnAddString = asnNum.ToString + " " + ASNToOwner.Item(asnNum)
+                If Not WhiteOrBlackListBox.Items.Contains(asnAddString) Then
+                    WhiteOrBlackListBox.Items.Add(asnAddString)
+                End If
             Next
-
         Else
             TestBtn.Enabled = False
         End If
@@ -184,11 +186,15 @@ Public Class Main
         Dim ipExternal As String
 
         Try
-            'temp solution to getting ip
-            ipExternal = wc.DownloadString("http://ipv4.icanhazip.com")
+            'my own server with a backup below, so i don't hammer someone elses server.
+            ipExternal = wc.DownloadString("http://www.seanmcs.com/ip.php")
             Exit Try
         Catch ex As Exception
-            Return "0.0.0.0"
+            Try
+                ipExternal = wc.DownloadString("http://ipv4.icanhazip.com")
+            Catch ex1 As Exception
+                Return "0.0.0.0"
+            End Try
         End Try
 
         Return ipExternal
@@ -209,10 +215,12 @@ Public Class Main
                 If Not isTestMode Then
                     KillFileSharing()
                 Else
-                    MsgBox("A black list match was found")
+                    MsgBox("A blacklist match was found, this would result in filesharing program termination")
                 End If
             Else
-                MsgBox("According to blacklist you are not on a black listed network")
+                If isTestMode Then
+                    MsgBox("According to blacklist you are not on a black listed network")
+                End If
             End If
         Else
             If Not asnBlackWhiteList.Contains(num) Then
@@ -222,7 +230,9 @@ Public Class Main
                     MsgBox("A non white list network was detected: " + ASNToOwner.Item(num))
                 End If
             Else
-                MsgBox("You are currently on a whitelisted network")
+                If isTestMode Then
+                    MsgBox("You are currently on a whitelisted network")
+                End If
             End If
         End If
 
@@ -275,7 +285,7 @@ Public Class Main
         Else
             SaveAndUpdateSettings()
             isFirstRun = False
-            'UpdateUserControls() 'fully test to see if this can be removed
+            UpdateUserControls() 'fully test to see if this can be removed
             MsgBox("Setting saved, please launch your program and use the test button")
             StopCheckerThread()
         End If
@@ -298,9 +308,12 @@ Public Class Main
         programName = GetSetting("DMCA Preventer", "settings", "program name")
         Dim asnString As String() = GetSetting("DMCA Preventer", "settings", "asnBlackWhiteList").Split()
 
-        For i As Integer = 0 To asnString.Count() - 1
-            asnBlackWhiteList.Add(ConvertStringToInt(asnString.GetValue(i)))
-        Next
+        If asnString.Count <> 1 Then
+            For i As Integer = 0 To asnString.Count() - 1
+                asnBlackWhiteList.Add(ConvertStringToInt(asnString.GetValue(i)))
+            Next
+        End If
+        
 
     End Sub
 
@@ -423,7 +436,7 @@ Public Class Main
         Dim addString As String = ""
 
         For i As Integer = 0 To asnList.Count() - 1 Step 1
-            addString = asnList.Item(i).ToString + " " + owner
+            addString = (asnList.Item(i).ToString + " " + owner).Trim()
 
             'prevent duplicates
             If Not WhiteOrBlackListBox.Items.Contains(addString) Then
@@ -442,7 +455,12 @@ Public Class Main
 
     Private Sub AddASN_Click(sender As Object, e As EventArgs) Handles AddASN.Click
         Dim asn As Integer = ConvertStringToInt(InputBox("Please enter ASN"))
-        WhiteOrBlackListBox.Items.Add(asn.ToString + " " + ASNToOwner.Item(asn))
+        Try
+            WhiteOrBlackListBox.Items.Add(asn.ToString + " " + ASNToOwner.Item(asn))
+        Catch ex As Exception
+            MsgBox("Invalid input or ASN not found.")
+        End Try
+
         asnBlackWhiteList.Add(asn)
     End Sub
 
