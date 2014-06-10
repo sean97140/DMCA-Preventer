@@ -75,9 +75,9 @@ Partial Class Main
         '
         'HideBtn
         '
-        Me.HideBtn.Location = New System.Drawing.Point(15, 216)
+        Me.HideBtn.Location = New System.Drawing.Point(15, 302)
         Me.HideBtn.Name = "HideBtn"
-        Me.HideBtn.Size = New System.Drawing.Size(75, 23)
+        Me.HideBtn.Size = New System.Drawing.Size(75, 30)
         Me.HideBtn.TabIndex = 1
         Me.HideBtn.Text = "Hide"
         Me.HideBtn.UseVisualStyleBackColor = True
@@ -100,27 +100,27 @@ Partial Class Main
         '
         'SaveBtn
         '
-        Me.SaveBtn.Location = New System.Drawing.Point(159, 111)
+        Me.SaveBtn.Location = New System.Drawing.Point(15, 266)
         Me.SaveBtn.Name = "SaveBtn"
-        Me.SaveBtn.Size = New System.Drawing.Size(40, 23)
+        Me.SaveBtn.Size = New System.Drawing.Size(75, 30)
         Me.SaveBtn.TabIndex = 4
         Me.SaveBtn.Text = "Save"
         Me.SaveBtn.UseVisualStyleBackColor = True
         '
         'Test
         '
-        Me.Test.Location = New System.Drawing.Point(205, 111)
+        Me.Test.Location = New System.Drawing.Point(104, 266)
         Me.Test.Name = "Test"
-        Me.Test.Size = New System.Drawing.Size(54, 23)
+        Me.Test.Size = New System.Drawing.Size(75, 30)
         Me.Test.TabIndex = 5
         Me.Test.Text = "Test"
         Me.Test.UseVisualStyleBackColor = True
         '
         'StartBtn
         '
-        Me.StartBtn.Location = New System.Drawing.Point(96, 216)
+        Me.StartBtn.Location = New System.Drawing.Point(104, 302)
         Me.StartBtn.Name = "StartBtn"
-        Me.StartBtn.Size = New System.Drawing.Size(75, 23)
+        Me.StartBtn.Size = New System.Drawing.Size(75, 30)
         Me.StartBtn.TabIndex = 6
         Me.StartBtn.Text = "Start"
         Me.StartBtn.UseVisualStyleBackColor = True
@@ -128,7 +128,7 @@ Partial Class Main
         'StatusLabel
         '
         Me.StatusLabel.AutoSize = True
-        Me.StatusLabel.Location = New System.Drawing.Point(177, 221)
+        Me.StatusLabel.Location = New System.Drawing.Point(178, 311)
         Me.StatusLabel.Name = "StatusLabel"
         Me.StatusLabel.Size = New System.Drawing.Size(96, 13)
         Me.StatusLabel.TabIndex = 7
@@ -145,11 +145,11 @@ Partial Class Main
         'CheckFrequencySec
         '
         Me.CheckFrequencySec.Increment = New Decimal(New Integer() {30, 0, 0, 0})
-        Me.CheckFrequencySec.Location = New System.Drawing.Point(213, 48)
+        Me.CheckFrequencySec.Location = New System.Drawing.Point(219, 48)
         Me.CheckFrequencySec.Maximum = New Decimal(New Integer() {300, 0, 0, 0})
         Me.CheckFrequencySec.Minimum = New Decimal(New Integer() {30, 0, 0, 0})
         Me.CheckFrequencySec.Name = "CheckFrequencySec"
-        Me.CheckFrequencySec.Size = New System.Drawing.Size(46, 20)
+        Me.CheckFrequencySec.Size = New System.Drawing.Size(40, 20)
         Me.CheckFrequencySec.TabIndex = 9
         Me.CheckFrequencySec.Value = New Decimal(New Integer() {30, 0, 0, 0})
         '
@@ -158,13 +158,13 @@ Partial Class Main
         Me.Label4.AutoSize = True
         Me.Label4.Location = New System.Drawing.Point(12, 50)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(190, 13)
+        Me.Label4.Size = New System.Drawing.Size(202, 13)
         Me.Label4.TabIndex = 10
-        Me.Label4.Text = "Check IP address frequency (seconds)"
+        Me.Label4.Text = "Check ASN address frequency (seconds)"
         '
         'userIPrange0
         '
-        Me.userIPrange0.Location = New System.Drawing.Point(159, 77)
+        Me.userIPrange0.Location = New System.Drawing.Point(478, 255)
         Me.userIPrange0.MaxLength = 3
         Me.userIPrange0.Name = "userIPrange0"
         Me.userIPrange0.Size = New System.Drawing.Size(30, 20)
@@ -172,7 +172,7 @@ Partial Class Main
         '
         'userIPrange1
         '
-        Me.userIPrange1.Location = New System.Drawing.Point(205, 77)
+        Me.userIPrange1.Location = New System.Drawing.Point(477, 281)
         Me.userIPrange1.MaxLength = 3
         Me.userIPrange1.Name = "userIPrange1"
         Me.userIPrange1.Size = New System.Drawing.Size(31, 20)
@@ -182,7 +182,7 @@ Partial Class Main
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(190, 76)
+        Me.Label5.Location = New System.Drawing.Point(368, 273)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(93, 20)
         Me.Label5.TabIndex = 13
@@ -191,7 +191,7 @@ Partial Class Main
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 81)
+        Me.Label6.Location = New System.Drawing.Point(344, 262)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(128, 13)
         Me.Label6.TabIndex = 14
@@ -199,7 +199,7 @@ Partial Class Main
         '
         'GetIpRng
         '
-        Me.GetIpRng.Location = New System.Drawing.Point(15, 111)
+        Me.GetIpRng.Location = New System.Drawing.Point(358, 281)
         Me.GetIpRng.Name = "GetIpRng"
         Me.GetIpRng.Size = New System.Drawing.Size(75, 23)
         Me.GetIpRng.TabIndex = 15
@@ -216,18 +216,18 @@ Partial Class Main
         '
         'Install
         '
-        Me.Install.Location = New System.Drawing.Point(205, 148)
+        Me.Install.Location = New System.Drawing.Point(189, 266)
         Me.Install.Name = "Install"
-        Me.Install.Size = New System.Drawing.Size(53, 23)
+        Me.Install.Size = New System.Drawing.Size(75, 30)
         Me.Install.TabIndex = 16
         Me.Install.Text = "Install"
         Me.Install.UseVisualStyleBackColor = True
         '
         'GetASN
         '
-        Me.GetASN.Location = New System.Drawing.Point(362, 178)
+        Me.GetASN.Location = New System.Drawing.Point(104, 230)
         Me.GetASN.Name = "GetASN"
-        Me.GetASN.Size = New System.Drawing.Size(71, 31)
+        Me.GetASN.Size = New System.Drawing.Size(75, 30)
         Me.GetASN.TabIndex = 17
         Me.GetASN.Text = "Get ASN(s)"
         Me.GetASN.UseVisualStyleBackColor = True
@@ -235,15 +235,15 @@ Partial Class Main
         'WhiteOrBlackListBox
         '
         Me.WhiteOrBlackListBox.FormattingEnabled = True
-        Me.WhiteOrBlackListBox.Location = New System.Drawing.Point(293, 38)
+        Me.WhiteOrBlackListBox.Location = New System.Drawing.Point(15, 90)
         Me.WhiteOrBlackListBox.Name = "WhiteOrBlackListBox"
-        Me.WhiteOrBlackListBox.Size = New System.Drawing.Size(206, 134)
+        Me.WhiteOrBlackListBox.Size = New System.Drawing.Size(241, 134)
         Me.WhiteOrBlackListBox.TabIndex = 18
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(290, 22)
+        Me.Label2.Location = New System.Drawing.Point(12, 74)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 19
@@ -251,18 +251,18 @@ Partial Class Main
         '
         'AddASN
         '
-        Me.AddASN.Location = New System.Drawing.Point(293, 178)
+        Me.AddASN.Location = New System.Drawing.Point(15, 230)
         Me.AddASN.Name = "AddASN"
-        Me.AddASN.Size = New System.Drawing.Size(63, 31)
+        Me.AddASN.Size = New System.Drawing.Size(75, 30)
         Me.AddASN.TabIndex = 20
         Me.AddASN.Text = "Add"
         Me.AddASN.UseVisualStyleBackColor = True
         '
         'DeleteASN
         '
-        Me.DeleteASN.Location = New System.Drawing.Point(439, 178)
+        Me.DeleteASN.Location = New System.Drawing.Point(189, 230)
         Me.DeleteASN.Name = "DeleteASN"
-        Me.DeleteASN.Size = New System.Drawing.Size(60, 30)
+        Me.DeleteASN.Size = New System.Drawing.Size(75, 30)
         Me.DeleteASN.TabIndex = 21
         Me.DeleteASN.Text = "Delete"
         Me.DeleteASN.UseVisualStyleBackColor = True
@@ -270,7 +270,7 @@ Partial Class Main
         'WhiteListRadio
         '
         Me.WhiteListRadio.AutoSize = True
-        Me.WhiteListRadio.Location = New System.Drawing.Point(301, 220)
+        Me.WhiteListRadio.Location = New System.Drawing.Point(104, 72)
         Me.WhiteListRadio.Name = "WhiteListRadio"
         Me.WhiteListRadio.Size = New System.Drawing.Size(65, 17)
         Me.WhiteListRadio.TabIndex = 22
@@ -281,7 +281,7 @@ Partial Class Main
         'BlackListRadio
         '
         Me.BlackListRadio.AutoSize = True
-        Me.BlackListRadio.Location = New System.Drawing.Point(372, 220)
+        Me.BlackListRadio.Location = New System.Drawing.Point(175, 72)
         Me.BlackListRadio.Name = "BlackListRadio"
         Me.BlackListRadio.Size = New System.Drawing.Size(64, 17)
         Me.BlackListRadio.TabIndex = 23
@@ -293,7 +293,7 @@ Partial Class Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(511, 262)
+        Me.ClientSize = New System.Drawing.Size(276, 340)
         Me.ControlBox = False
         Me.Controls.Add(Me.BlackListRadio)
         Me.Controls.Add(Me.WhiteListRadio)
