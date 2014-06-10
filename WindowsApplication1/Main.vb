@@ -365,6 +365,7 @@ Public Class Main
                 Dim asnListString As String = ""
                 For i As Integer = 0 To asnList.Count() - 1 Step 1
                     asnListString = (asnListString + " " + asnList.Item(i).ToString).Trim
+                    ListBox1.Items.Add(asnList.Item(i).ToString + " " + owner)
                 Next
 
                 MsgBox("Other ASNs for: " + owner + " are: " + asnListString)
@@ -376,6 +377,15 @@ Public Class Main
             MsgBox("Lookup failed, please check if you are connected to the internet.")
         End If
 
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        ListBox1.Items.Remove(ListBox1.SelectedItem)
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim temp As Integer = SetValue(InputBox("Please enter ASN"))
+        ListBox1.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
     End Sub
 End Class
 
