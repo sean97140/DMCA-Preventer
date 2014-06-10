@@ -45,25 +45,41 @@ Public Class Main
 
         Dim ipRangeToASNDataFile As String = "data-raw-table.txt"
         Dim ASNToOwnerDataFile As String = "data-used-autnums.txt"
-        '
-        Dim ipRangeDataFileReader
-        Dim ASNToOwnerDataFileReader
+        'Dim ipRangeDataFileReader
+        'Dim ASNToOwnerDataFileReader
+        Dim br As BinaryReader
 
         Try
-            ipRangeDataFileReader = New System.IO.StreamReader(ipRangeToASNDataFile)
+            'Dim stream As New MemoryStream(File.ReadAllBytes(ipRangeToASNDataFile))
+            'ipRangeDataFileReader = New System.IO.StreamReader(ipRangeToASNDataFile)
+            br = New BinaryReader(System.IO.File.OpenRead(ipRangeToASNDataFile))
         Catch ex As Exception
             MsgBox("No ASN data file found, please wait while it is downloaded. File size 10mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-raw-table", "data-raw-table.txt")
-            ipRangeDataFileReader = New System.IO.StreamReader(ipRangeToASNDataFile)
+            'ipRangeDataFileReader = New System.IO.StreamReader(ipRangeToASNDataFile)
+            br = New BinaryReader(System.IO.File.OpenRead(ipRangeToASNDataFile))
         End Try
 
+        Dim bData As Byte()
+        bData = br.ReadBytes(br.BaseStream.Length)
+        Dim ms As MemoryStream = New MemoryStream(bData, 0, bData.Length)
+        Dim ipRangeDataFileReader As New System.IO.StreamReader(ms)
+
+        Dim br1 As BinaryReader
         Try
-            ASNToOwnerDataFileReader = New System.IO.StreamReader(ASNToOwnerDataFile)
+            'ASNToOwnerDataFileReader = New System.IO.StreamReader(ASNToOwnerDataFile)
+            br1 = New BinaryReader(System.IO.File.OpenRead(ASNToOwnerDataFile))
         Catch ex As Exception
             MsgBox("No ASN to Owner data file found, please wait while it is downloaded. File size 2mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-used-autnums", "data-used-autnums.txt")
-            ASNToOwnerDataFileReader = New System.IO.StreamReader(ASNToOwnerDataFile)
+            'ASNToOwnerDataFileReader = New System.IO.StreamReader(ASNToOwnerDataFile)
+            br1 = New BinaryReader(System.IO.File.OpenRead(ASNToOwnerDataFile))
         End Try
+
+        Dim bData1 As Byte()
+        bData1 = br1.ReadBytes(br1.BaseStream.Length)
+        Dim ms2 As MemoryStream = New MemoryStream(bData1, 0, bData1.Length)
+        Dim ASNToOwnerDataFileReader As New System.IO.StreamReader(ms2)
 
         Dim TextLine As String = ""
         Dim ipRange As String
@@ -79,21 +95,21 @@ Public Class Main
         Dim ownerParts As String()
         Dim owner As String = ""
 
-        Try
-            Do While ASNToOwnerDataFileReader.Peek() <> -1
-                owner = ""
-                TextLine = ASNToOwnerDataFileReader.ReadLine().ToString().Trim()
-                ownerParts = TextLine.Split()
-                For i As Integer = 1 To ownerParts.Length - 1
-                    owner = owner + " " + ownerParts(i)
-                Next
+        'Try
+        Do While ASNToOwnerDataFileReader.Peek() <> -1
+            owner = ""
+            TextLine = ASNToOwnerDataFileReader.ReadLine().ToString().Trim()
+            ownerParts = TextLine.Split()
+            For i As Integer = 1 To ownerParts.Length - 1
+                owner = owner + " " + ownerParts(i)
+            Next
 
-                asn = SetValue(TextLine.Split()(0))
-                ASNToOwner.Add(asn, owner.Trim())
-            Loop
-        Catch ex As Exception
-            MsgBox(ex.ToString)
-        End Try
+            asn = SetValue(TextLine.Split()(0))
+            ASNToOwner.Add(asn, owner.Trim())
+        Loop
+        'Catch ex As Exception
+        'MsgBox(ex.ToString)
+        'End Try
 
         ipRangeDataFileReader.Close()
         ASNToOwnerDataFileReader.Close()
