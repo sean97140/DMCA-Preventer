@@ -241,7 +241,7 @@ Public Class Main
         Dim pProcess() As Process = System.Diagnostics.Process.GetProcessesByName(programName)
         For Each p As Process In pProcess
             p.Kill()
-            MsgBox("You've been saved from a potential DMCA violation running " + programName.ToUpper + " on campus ip address space", vbSystemModal + vbExclamation)
+            MsgBox("You've been saved from a potential DMCA violation running " + programName.ToUpper + " on " + ASNToOwner.Item(GetASNumber()) + "'s network", vbSystemModal + vbExclamation)
             wasKilled = True
         Next
     End Sub
