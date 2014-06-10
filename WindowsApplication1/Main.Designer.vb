@@ -45,12 +45,12 @@ Partial Class Main
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.Install = New System.Windows.Forms.Button()
         Me.GetASN = New System.Windows.Forms.Button()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Me.WhiteOrBlackListBox = New System.Windows.Forms.ListBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.AddASN = New System.Windows.Forms.Button()
+        Me.DeleteASN = New System.Windows.Forms.Button()
+        Me.WhiteListRadio = New System.Windows.Forms.RadioButton()
+        Me.BlackListRadio = New System.Windows.Forms.RadioButton()
         Me.ContextMenuStrip1.SuspendLayout()
         CType(Me.CheckFrequencySec, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -232,13 +232,13 @@ Partial Class Main
         Me.GetASN.Text = "Get ASN(s)"
         Me.GetASN.UseVisualStyleBackColor = True
         '
-        'ListBox1
+        'WhiteOrBlackListBox
         '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(293, 38)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(206, 134)
-        Me.ListBox1.TabIndex = 18
+        Me.WhiteOrBlackListBox.FormattingEnabled = True
+        Me.WhiteOrBlackListBox.Location = New System.Drawing.Point(293, 38)
+        Me.WhiteOrBlackListBox.Name = "WhiteOrBlackListBox"
+        Me.WhiteOrBlackListBox.Size = New System.Drawing.Size(206, 134)
+        Me.WhiteOrBlackListBox.TabIndex = 18
         '
         'Label2
         '
@@ -249,45 +249,45 @@ Partial Class Main
         Me.Label2.TabIndex = 19
         Me.Label2.Text = "ASN Blacklist"
         '
-        'Button1
+        'AddASN
         '
-        Me.Button1.Location = New System.Drawing.Point(293, 178)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(63, 31)
-        Me.Button1.TabIndex = 20
-        Me.Button1.Text = "Add"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.AddASN.Location = New System.Drawing.Point(293, 178)
+        Me.AddASN.Name = "AddASN"
+        Me.AddASN.Size = New System.Drawing.Size(63, 31)
+        Me.AddASN.TabIndex = 20
+        Me.AddASN.Text = "Add"
+        Me.AddASN.UseVisualStyleBackColor = True
         '
-        'Button2
+        'DeleteASN
         '
-        Me.Button2.Location = New System.Drawing.Point(439, 178)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(60, 30)
-        Me.Button2.TabIndex = 21
-        Me.Button2.Text = "Delete"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.DeleteASN.Location = New System.Drawing.Point(439, 178)
+        Me.DeleteASN.Name = "DeleteASN"
+        Me.DeleteASN.Size = New System.Drawing.Size(60, 30)
+        Me.DeleteASN.TabIndex = 21
+        Me.DeleteASN.Text = "Delete"
+        Me.DeleteASN.UseVisualStyleBackColor = True
         '
-        'RadioButton1
+        'WhiteListRadio
         '
-        Me.RadioButton1.AutoSize = True
-        Me.RadioButton1.Location = New System.Drawing.Point(301, 220)
-        Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(65, 17)
-        Me.RadioButton1.TabIndex = 22
-        Me.RadioButton1.TabStop = True
-        Me.RadioButton1.Text = "Whitelist"
-        Me.RadioButton1.UseVisualStyleBackColor = True
+        Me.WhiteListRadio.AutoSize = True
+        Me.WhiteListRadio.Location = New System.Drawing.Point(301, 220)
+        Me.WhiteListRadio.Name = "WhiteListRadio"
+        Me.WhiteListRadio.Size = New System.Drawing.Size(65, 17)
+        Me.WhiteListRadio.TabIndex = 22
+        Me.WhiteListRadio.TabStop = True
+        Me.WhiteListRadio.Text = "Whitelist"
+        Me.WhiteListRadio.UseVisualStyleBackColor = True
         '
-        'RadioButton2
+        'BlackListRadio
         '
-        Me.RadioButton2.AutoSize = True
-        Me.RadioButton2.Location = New System.Drawing.Point(372, 220)
-        Me.RadioButton2.Name = "RadioButton2"
-        Me.RadioButton2.Size = New System.Drawing.Size(64, 17)
-        Me.RadioButton2.TabIndex = 23
-        Me.RadioButton2.TabStop = True
-        Me.RadioButton2.Text = "Blacklist"
-        Me.RadioButton2.UseVisualStyleBackColor = True
+        Me.BlackListRadio.AutoSize = True
+        Me.BlackListRadio.Location = New System.Drawing.Point(372, 220)
+        Me.BlackListRadio.Name = "BlackListRadio"
+        Me.BlackListRadio.Size = New System.Drawing.Size(64, 17)
+        Me.BlackListRadio.TabIndex = 23
+        Me.BlackListRadio.TabStop = True
+        Me.BlackListRadio.Text = "Blacklist"
+        Me.BlackListRadio.UseVisualStyleBackColor = True
         '
         'Main
         '
@@ -295,12 +295,12 @@ Partial Class Main
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(511, 262)
         Me.ControlBox = False
-        Me.Controls.Add(Me.RadioButton2)
-        Me.Controls.Add(Me.RadioButton1)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.BlackListRadio)
+        Me.Controls.Add(Me.WhiteListRadio)
+        Me.Controls.Add(Me.DeleteASN)
+        Me.Controls.Add(Me.AddASN)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.ListBox1)
+        Me.Controls.Add(Me.WhiteOrBlackListBox)
         Me.Controls.Add(Me.GetASN)
         Me.Controls.Add(Me.Install)
         Me.Controls.Add(Me.GetIpRng)
@@ -348,11 +348,11 @@ Partial Class Main
     Friend WithEvents NotifyIcon1 As System.Windows.Forms.NotifyIcon
     Friend WithEvents Install As System.Windows.Forms.Button
     Friend WithEvents GetASN As System.Windows.Forms.Button
-    Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
+    Friend WithEvents WhiteOrBlackListBox As System.Windows.Forms.ListBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents RadioButton1 As System.Windows.Forms.RadioButton
-    Friend WithEvents RadioButton2 As System.Windows.Forms.RadioButton
+    Friend WithEvents AddASN As System.Windows.Forms.Button
+    Friend WithEvents DeleteASN As System.Windows.Forms.Button
+    Friend WithEvents WhiteListRadio As System.Windows.Forms.RadioButton
+    Friend WithEvents BlackListRadio As System.Windows.Forms.RadioButton
 
 End Class

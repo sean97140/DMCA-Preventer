@@ -23,6 +23,7 @@ Public Class Main
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForFirstRunUpdateAndStartThread()
     End Sub
+
     Private Sub CheckForFirstRunUpdateAndStartThread()
         GetSettings()
 
@@ -37,43 +38,39 @@ Public Class Main
             SetTimeout()
             StartCheckerThread()
         End If
+
     End Sub
     Private Sub LoadASNTable()
         'http://quaxio.com/bgp/ much credit deserved for finding this method
 
-        Dim FILE_NAME As String = "data-raw-table.txt"
-        Dim FILE_NAME1 As String = "data-used-autnums.txt"
+        Dim ipRangeToASNDataFile As String = "data-raw-table.txt"
+        Dim ASNToOwnerDataFile As String = "data-used-autnums.txt"
         '
-        Dim objReader
-        Dim objReader1
+        Dim ipRangeDataFileReader
+        Dim ASNToOwnerDataFileReader
 
         Try
-            objReader = New System.IO.StreamReader(FILE_NAME)
-
+            ipRangeDataFileReader = New System.IO.StreamReader(ipRangeToASNDataFile)
         Catch ex As Exception
-            '    StatusLabel.Text = "Downloading ASN lookup table"
             MsgBox("No ASN data file found, please wait while it is downloaded. File size 10mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-raw-table", "data-raw-table.txt")
-            objReader = New System.IO.StreamReader(FILE_NAME)
+            ipRangeDataFileReader = New System.IO.StreamReader(ipRangeToASNDataFile)
         End Try
 
         Try
-            objReader1 = New System.IO.StreamReader(FILE_NAME1)
-
+            ASNToOwnerDataFileReader = New System.IO.StreamReader(ASNToOwnerDataFile)
         Catch ex As Exception
-            '    StatusLabel.Text = "Downloading ASN lookup table"
             MsgBox("No ASN to Owner data file found, please wait while it is downloaded. File size 2mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-used-autnums", "data-used-autnums.txt")
-            objReader1 = New System.IO.StreamReader(FILE_NAME1)
+            ASNToOwnerDataFileReader = New System.IO.StreamReader(ASNToOwnerDataFile)
         End Try
 
         Dim TextLine As String = ""
         Dim ipRange As String
         Dim asn As Integer = -1
-        'StatusLabel.Text = "Loading ASN lookup table"
 
-        Do While objReader.Peek() <> -1
-            TextLine = objReader.ReadLine()
+        Do While ipRangeDataFileReader.Peek() <> -1
+            TextLine = ipRangeDataFileReader.ReadLine()
             ipRange = TextLine.Split()(0)
             asn = SetValue(TextLine.Split()(1))
             ipRangeToASN.Add(ipRange, asn)
@@ -83,9 +80,9 @@ Public Class Main
         Dim owner As String = ""
 
         Try
-            Do While objReader1.Peek() <> -1
+            Do While ASNToOwnerDataFileReader.Peek() <> -1
                 owner = ""
-                TextLine = objReader1.ReadLine().ToString().Trim()
+                TextLine = ASNToOwnerDataFileReader.ReadLine().ToString().Trim()
                 ownerParts = TextLine.Split()
                 For i As Integer = 1 To ownerParts.Length - 1
                     owner = owner + " " + ownerParts(i)
@@ -97,8 +94,9 @@ Public Class Main
         Catch ex As Exception
             MsgBox(ex.ToString)
         End Try
-        objReader.Close()
-        objReader1.Close()
+
+        ipRangeDataFileReader.Close()
+        ASNToOwnerDataFileReader.Close()
 
         For Each i As Integer In ASNToOwner.Keys()
             Dim owner1 As String = ASNToOwner.Item(i)
@@ -112,7 +110,6 @@ Public Class Main
             End If
 
         Next
-        'MsgBox("done")
 
     End Sub
     Private Sub UpdateUserControls()
@@ -126,16 +123,17 @@ Public Class Main
 
             If isBlackList Then
                 Label2.Text = "ASN Blacklist"
-                RadioButton2.Checked = True
+                BlackListRadio.Checked = True
             Else
                 Label2.Text = "ASN Whitelist"
-                RadioButton1.Checked = True
+                WhiteListRadio.Checked = True
             End If
 
             For i As Integer = 0 To asnBlackWhiteList.Count() - 1
                 Dim temp As String = asnBlackWhiteList.Item(i)
-                ListBox1.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
+                WhiteOrBlackListBox.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
             Next
+
         Else
             Test.Enabled = False
         End If
@@ -150,7 +148,6 @@ Public Class Main
         Catch ex As Exception
             Return -1
         End Try
-
     End Function
 
     Private Sub StartCheckerThread()
@@ -169,13 +166,13 @@ Public Class Main
             'do nothing - temp hack to fix bug
         End Try
 
-
     End Sub
     Private Function GetIPAddress() As String
         Dim wc As New WebClient
         Dim ipExternal As String
 
         Try
+            'temp solution to getting ip
             ipExternal = wc.DownloadString("http://ipv4.icanhazip.com")
             Exit Try
         Catch ex As Exception
@@ -190,6 +187,7 @@ Public Class Main
         While True
             Threading.Thread.Sleep(timeout)
             ipArray = GetIPAddress().Split(".")
+
             If ipArray(0) = ipRange(0) And ipArray(1) = ipRange(1) Then
                 KillFileSharing()
             End If
@@ -202,6 +200,7 @@ Public Class Main
         While True
             Threading.Thread.Sleep(timeout)
             Dim num As Integer = GetASNumber()
+
             If isBlackList Then
                 If asnBlackWhiteList.Contains(num) Then
                     KillFileSharing()
@@ -211,6 +210,7 @@ Public Class Main
                     KillFileSharing()
                 End If
             End If
+
             'Garbage collector is lazy, and this program will slowly consume ALOT of memory before it kicks in (if it does)
             GC.Collect()
         End While
@@ -233,10 +233,12 @@ Public Class Main
         Show()
         NotifyIcon1.Visible = False
     End Sub
+
     Private Sub HideForm()
         Hide()
         NotifyIcon1.Visible = True
     End Sub
+
     Private Sub KillFileSharing()
         Dim pProcess() As Process = System.Diagnostics.Process.GetProcessesByName(programName)
         For Each p As Process In pProcess
@@ -251,19 +253,15 @@ Public Class Main
     End Sub
 
     Private Sub SaveBtn_Click(sender As Object, e As EventArgs) Handles SaveBtn.Click
-        Dim txtinput As String()
-        txtinput = UserProgName.Text.Split(".")
+        Dim txtinput As String() = UserProgName.Text.Split(".")
 
         If txtinput.Length > 1 Then
             MsgBox("Please enter only the process name, not the .exe portion. Please check correction and resave.")
             UserProgName.Text = txtinput(0)
         Else
-
             SaveAndUpdateSettings()
             firstRun = False
-
             'UpdateUserControls()
-
             MsgBox("Setting saved, please launch your program and use the test button")
             StopCheckerThread()
         End If
@@ -286,7 +284,6 @@ Public Class Main
         ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
         Dim asnString As String() = GetSetting("DMCA Preventer", "settings", "asnBlackWhiteList").Split()
 
-        'asnBlackWhiteList.Add(SetValue(asnString.GetValue(0)))
         For i As Integer = 0 To asnString.Count() - 1
             asnBlackWhiteList.Add(SetValue(asnString.GetValue(i)))
         Next
@@ -307,11 +304,11 @@ Public Class Main
         Next
 
         SaveSetting("DMCA Preventer", "settings", "asnBlackWhiteList", asnString.Trim())
-
-
         programName = UserProgName.Text
         SetTimeout()
     End Sub
+
+    'update for asn
     Private Sub Test_Click(sender As Object, e As EventArgs) Handles Test.Click
         wasKilled = False
         Dim ipArray = GetIPAddress().Split(".")
@@ -331,6 +328,7 @@ Public Class Main
         StartCheckerThread()
     End Sub
 
+    'remove
     Private Sub GetIpRange_Click(sender As Object, e As EventArgs) Handles GetIpRng.Click
         Dim temp As Integer = MsgBox("Are you on campus internet/vpn?", MsgBoxStyle.YesNo)
         If temp = MsgBoxResult.Yes Then
@@ -342,11 +340,9 @@ Public Class Main
                 userIPrange1.Text = ipArray(1)
                 MsgBox("Please save your settings if the information is correct")
             End If
-
         Else
             MsgBox("Please connect to campus internet and try again.")
         End If
-
     End Sub
 
 
@@ -374,7 +370,6 @@ Public Class Main
             MsgBox("Install Sucessful, current instance will now close and installed copy will be executed")
             System.Diagnostics.Process.Start(filePathAndName)
             End
-
         Catch ex As Exception
             'Debuging for now, proper exception handling needed
             MsgBox(ex.ToString)
@@ -396,7 +391,6 @@ Public Class Main
                 Dim secondPrefix As Integer = SetValue(test1(2))
                 secondPrefix = (secondPrefix >> maskBits - 8) << maskBits - 8
                 test1(2) = secondPrefix.ToString
-
             ElseIf maskBits <= 24 Then
                 Dim thirdPrefix As Integer = SetValue(test1(1))
                 thirdPrefix = (thirdPrefix >> maskBits - 16) << maskBits - 16
@@ -406,62 +400,60 @@ Public Class Main
                 fourthPrefix = (fourthPrefix >> maskBits - 24) << maskBits - 24
                 test1(0) = fourthPrefix.ToString
             End If
+
             Dim testString As String = String.Join(".", test1) + "/" + (32 - maskBits).ToString()
 
             If ipRangeToASN.ContainsKey(testString) Then
-                ' Write value of the key.
                 asnNum = ipRangeToASN.Item(testString)
-                'MsgBox(testString + " AS" + num.ToString + " " + owner)
                 found = True
                 Exit For
-                'MsgBox("Other ASNs for: " + Owner + " are: " + asnListString)
             Else
                 found = False
             End If
         Next
+
         If found Then
             Return asnNum
         Else
             Return -1
         End If
-        'Return -1
+
     End Function
     Private Sub GetASN_Click(sender As Object, e As EventArgs) Handles GetASN.Click
         'http://www.unixwiz.net/techtips/netmask-ref.html
         'http://quaxio.com/bgp/ much credit deserved for finding this method
 
         Dim num As Integer = GetASNumber()
-
         Dim owner As String = ASNToOwner.Item(num)
         Dim asnList As List(Of Integer) = OwnerToASNs.Item(owner)
-
         Dim asnListString As String = ""
+
         For i As Integer = 0 To asnList.Count() - 1 Step 1
             asnListString = (asnListString + " " + asnList.Item(i).ToString).Trim
-            ListBox1.Items.Add(asnList.Item(i).ToString + " " + owner)
+            WhiteOrBlackListBox.Items.Add(asnList.Item(i).ToString + " " + owner)
             asnBlackWhiteList.Add(asnList.Item(i))
         Next
 
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        asnBlackWhiteList.Remove(ListBox1.SelectedItem.ToString.Split()(0))
-        ListBox1.Items.Remove(ListBox1.SelectedItem)
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles DeleteASN.Click
+        asnBlackWhiteList.Remove(WhiteOrBlackListBox.SelectedItem.ToString.Split()(0))
+        WhiteOrBlackListBox.Items.Remove(WhiteOrBlackListBox.SelectedItem)
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles AddASN.Click
         Dim temp As Integer = SetValue(InputBox("Please enter ASN"))
-        ListBox1.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
+        WhiteOrBlackListBox.Items.Add(temp.ToString + " " + ASNToOwner.Item(temp))
         asnBlackWhiteList.Add(temp)
 
     End Sub
 
-    Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged
+    Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles WhiteListRadio.CheckedChanged
         Label2.Text = "ASN Whitelist"
         isBlackList = False
     End Sub
 
-    Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
+    Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles BlackListRadio.CheckedChanged
         Label2.Text = "ASN Blacklist"
         isBlackList = True
     End Sub
