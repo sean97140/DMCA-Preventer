@@ -110,7 +110,7 @@ Public Class Main
             End If
 
         Next
-        MsgBox("done")
+        'MsgBox("done")
 
     End Sub
     Private Sub UpdateUserControls()
@@ -357,8 +357,17 @@ Public Class Main
             If ipRangeToASN.ContainsKey(testString) Then
                 ' Write value of the key.
                 Dim num As Integer = ipRangeToASN.Item(testString)
-                MsgBox(testString + " AS" + num.ToString + " " + ASNToOwner.Item(num))
+                Dim owner As String = ASNToOwner.Item(num)
+                MsgBox(testString + " AS" + num.ToString + " " + owner)
                 found = True
+                Dim asnList As List(Of Integer) = OwnerToASNs.Item(owner)
+
+                Dim asnListString As String = ""
+                For i As Integer = 0 To asnList.Count() - 1 Step 1
+                    asnListString = (asnListString + " " + asnList.Item(i).ToString).Trim
+                Next
+
+                MsgBox("Other ASNs for: " + owner + " are: " + asnListString)
 
             End If
 
