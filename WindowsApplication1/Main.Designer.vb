@@ -31,7 +31,7 @@ Partial Class Main
         Me.UserProgName = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.SaveBtn = New System.Windows.Forms.Button()
-        Me.Test = New System.Windows.Forms.Button()
+        Me.TestBtn = New System.Windows.Forms.Button()
         Me.StartBtn = New System.Windows.Forms.Button()
         Me.StatusLabel = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -43,7 +43,7 @@ Partial Class Main
         Me.Label6 = New System.Windows.Forms.Label()
         Me.GetIpRng = New System.Windows.Forms.Button()
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
-        Me.Install = New System.Windows.Forms.Button()
+        Me.InstallBtn = New System.Windows.Forms.Button()
         Me.GetASN = New System.Windows.Forms.Button()
         Me.WhiteOrBlackListBox = New System.Windows.Forms.ListBox()
         Me.listTypeLabel = New System.Windows.Forms.Label()
@@ -109,12 +109,12 @@ Partial Class Main
         '
         'Test
         '
-        Me.Test.Location = New System.Drawing.Point(98, 266)
-        Me.Test.Name = "Test"
-        Me.Test.Size = New System.Drawing.Size(75, 30)
-        Me.Test.TabIndex = 5
-        Me.Test.Text = "Test"
-        Me.Test.UseVisualStyleBackColor = True
+        Me.TestBtn.Location = New System.Drawing.Point(98, 266)
+        Me.TestBtn.Name = "Test"
+        Me.TestBtn.Size = New System.Drawing.Size(75, 30)
+        Me.TestBtn.TabIndex = 5
+        Me.TestBtn.Text = "Test"
+        Me.TestBtn.UseVisualStyleBackColor = True
         '
         'StartBtn
         '
@@ -216,12 +216,12 @@ Partial Class Main
         '
         'Install
         '
-        Me.Install.Location = New System.Drawing.Point(181, 266)
-        Me.Install.Name = "Install"
-        Me.Install.Size = New System.Drawing.Size(75, 30)
-        Me.Install.TabIndex = 16
-        Me.Install.Text = "Install"
-        Me.Install.UseVisualStyleBackColor = True
+        Me.InstallBtn.Location = New System.Drawing.Point(181, 266)
+        Me.InstallBtn.Name = "Install"
+        Me.InstallBtn.Size = New System.Drawing.Size(75, 30)
+        Me.InstallBtn.TabIndex = 16
+        Me.InstallBtn.Text = "Install"
+        Me.InstallBtn.UseVisualStyleBackColor = True
         '
         'GetASN
         '
@@ -302,7 +302,7 @@ Partial Class Main
         Me.Controls.Add(Me.listTypeLabel)
         Me.Controls.Add(Me.WhiteOrBlackListBox)
         Me.Controls.Add(Me.GetASN)
-        Me.Controls.Add(Me.Install)
+        Me.Controls.Add(Me.InstallBtn)
         Me.Controls.Add(Me.GetIpRng)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.userIPrange1)
@@ -312,7 +312,7 @@ Partial Class Main
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.StatusLabel)
         Me.Controls.Add(Me.StartBtn)
-        Me.Controls.Add(Me.Test)
+        Me.Controls.Add(Me.TestBtn)
         Me.Controls.Add(Me.SaveBtn)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.UserProgName)
@@ -334,7 +334,7 @@ Partial Class Main
     Friend WithEvents UserProgName As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents SaveBtn As System.Windows.Forms.Button
-    Friend WithEvents Test As System.Windows.Forms.Button
+    Friend WithEvents TestBtn As System.Windows.Forms.Button
     Friend WithEvents StartBtn As System.Windows.Forms.Button
     Friend WithEvents StatusLabel As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
@@ -346,7 +346,7 @@ Partial Class Main
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents GetIpRng As System.Windows.Forms.Button
     Friend WithEvents NotifyIcon1 As System.Windows.Forms.NotifyIcon
-    Friend WithEvents Install As System.Windows.Forms.Button
+    Friend WithEvents InstallBtn As System.Windows.Forms.Button
     Friend WithEvents GetASN As System.Windows.Forms.Button
     Friend WithEvents WhiteOrBlackListBox As System.Windows.Forms.ListBox
     Friend WithEvents listTypeLabel As System.Windows.Forms.Label

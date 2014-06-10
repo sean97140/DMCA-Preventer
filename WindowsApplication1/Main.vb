@@ -128,8 +128,8 @@ Public Class Main
         If Not isFirstRun Then
             UserProgName.Text = programName
             CheckFrequencySec.Value = ConvertStringToInt(timeoutString)
-            Install.Enabled = Not installed
-            Test.Enabled = True
+            InstallBtn.Enabled = Not installed
+            TestBtn.Enabled = True
 
             If isBlackList Then
                 listTypeLabel.Text = "ASN Blacklist"
@@ -145,7 +145,7 @@ Public Class Main
             Next
 
         Else
-            Test.Enabled = False
+            TestBtn.Enabled = False
         End If
     End Sub
     Private Sub SetTimeout()
@@ -197,23 +197,38 @@ Public Class Main
     Private Sub ASNChecker()
         While True
             Threading.Thread.Sleep(timeout)
-            Dim num As Integer = GetASNumber()
-
-            If isBlackList Then
-                If asnBlackWhiteList.Contains(num) Then
-                    KillFileSharing()
-                End If
-            Else
-                If Not asnBlackWhiteList.Contains(num) Then
-                    KillFileSharing()
-                End If
-            End If
-
-            'Garbage collector is lazy, and this program will slowly consume ALOT of memory before it kicks in (if it does)
-            GC.Collect()
+            CheckASNAndKillIfNecessary(False)
         End While
     End Sub
 
+    Private Sub CheckASNAndKillIfNecessary(isTestMode As Boolean)
+        Dim num As Integer = GetASNumber()
+
+        If isBlackList Then
+            If asnBlackWhiteList.Contains(num) Then
+                If Not isTestMode Then
+                    KillFileSharing()
+                Else
+                    MsgBox("A black list match was found")
+                End If
+            Else
+                MsgBox("According to blacklist you are not on a black listed network")
+            End If
+        Else
+            If Not asnBlackWhiteList.Contains(num) Then
+                If Not isTestMode Then
+                    KillFileSharing()
+                Else
+                    MsgBox("A non white list network was detected: " + ASNToOwner.Item(num))
+                End If
+            Else
+                MsgBox("You are currently on a whitelisted network")
+            End If
+        End If
+
+        'Garbage collector is lazy, and this program will slowly consume ALOT of memory before it kicks in (if it does)
+        GC.Collect()
+    End Sub
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
         ASNCheckerThread.Abort()
         Close()
@@ -281,7 +296,6 @@ Public Class Main
 
         timeoutString = GetSetting("DMCA Preventer", "settings", "timeout")
         programName = GetSetting("DMCA Preventer", "settings", "program name")
-        '       ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
         Dim asnString As String() = GetSetting("DMCA Preventer", "settings", "asnBlackWhiteList").Split()
 
         For i As Integer = 0 To asnString.Count() - 1
@@ -295,8 +309,6 @@ Public Class Main
         SaveSetting("DMCA Preventer", "settings", "installed", installed.ToString)
         SaveSetting("DMCA Preventer", "settings", "BlackList", isBlackList.ToString)
         SaveSetting("DMCA Preventer", "settings", "timeout", CheckFrequencySec.Value.ToString)
-        '        SaveSetting("DMCA Preventer", "settings", "ipPrefix", userIPrange0.Text + "." + userIPrange1.Text)
-        'ipRange = GetSetting("DMCA Preventer", "settings", "ipPrefix").Split(".")
 
         Dim asnString As String = ""
 
@@ -310,7 +322,7 @@ Public Class Main
     End Sub
 
     'update for asn
-    Private Sub Test_Click(sender As Object, e As EventArgs) Handles Test.Click
+    Private Sub Test_Click(sender As Object, e As EventArgs) Handles TestBtn.Click
         wasKilled = False
         Dim ipArray = GetIPAddress().Split(".")
 
@@ -319,19 +331,14 @@ Public Class Main
             MsgBox("Please verify the process name of your program, it may not be running. EX: utorrent")
         End If
 
-        '--depricate, needs to be updated for asn
-        ' If ipArray(0) = ipRange(0) And ipArray(1) = ipRange(1) Then
-        'MsgBox("You are on campus IP address space and can recieve a DMCA with any file sharing")
-        'Else
-        'MsgBox("According to the settings, you are not on campus internet. Your IP address is: " + String.Join(".", ipArray))
-        'End If
+        CheckASNAndKillIfNecessary(True)
     End Sub
 
     Private Sub StartBtn_Click(sender As Object, e As EventArgs) Handles StartBtn.Click
         StartCheckerThread()
     End Sub
 
-    Private Sub Install_Click(sender As Object, e As EventArgs) Handles Install.Click
+    Private Sub Install_Click(sender As Object, e As EventArgs) Handles InstallBtn.Click
         Dim exePathAndName As String = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
 
         'catches when the program is running in visual studio where it will incorrectly use the progname.vshost.exe
@@ -390,10 +397,10 @@ Public Class Main
                 ipAddressArray(0) = fourthPrefix.ToString
             End If
 
-            Dim testString As String = String.Join(".", ipAddressArray) + "/" + (32 - maskBits).ToString()
+            Dim ipRangeString As String = String.Join(".", ipAddressArray) + "/" + (32 - maskBits).ToString()
 
-            If ipRangeToASN.ContainsKey(testString) Then
-                asnNum = ipRangeToASN.Item(testString)
+            If ipRangeToASN.ContainsKey(ipRangeString) Then
+                asnNum = ipRangeToASN.Item(ipRangeString)
                 matchWasFound = True
                 Exit For
             Else
