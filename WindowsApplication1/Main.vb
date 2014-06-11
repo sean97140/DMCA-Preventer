@@ -1,7 +1,22 @@
-﻿Imports System.Web.HttpContext
+﻿'
+' Copyright 2014 Sean Mahan
+'
+'   Licensed under the Apache License, Version 2.0 (the "License");
+'   you may not use this file except in compliance with the License.
+'   You may obtain a copy of the License at
+'
+'       http://www.apache.org/licenses/LICENSE-2.0
+'
+'   Unless required by applicable law or agreed to in writing, software
+'   distributed under the License is distributed on an "AS IS" BASIS,
+'   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+'   See the License for the specific language governing permissions and
+'   limitations under the License.
+'
+
 Imports System.Net
 Imports System.IO
-Imports System.Math
+
 
 
 Public Class Main
@@ -11,7 +26,6 @@ Public Class Main
     Dim wasKilled As Boolean = False
     Dim timeout As Integer
     Dim timeoutString As String
-    'Dim ipRange() As String
     Dim installed As Boolean = False
 
     Dim ipRangeToASN As New Dictionary(Of String, Integer)
@@ -47,6 +61,7 @@ Public Class Main
         LoadAndBuildASNToOwnerTable()
         BuildOwnerToASNsTable()
     End Sub
+
     Private Sub LoadAndBuildIpRangeToASNTable()
         Dim ipRangeToASNDataFile As String = "data-raw-table.txt"
         Dim ipRangeBinaryReader As BinaryReader
@@ -75,6 +90,7 @@ Public Class Main
 
         ipRangeDataFileReader.Close()
     End Sub
+
     Private Sub LoadAndBuildASNToOwnerTable()
         Dim ASNToOwnerDataFile As String = "data-used-autnums.txt"
         Dim asnOwnerBinaryReader As BinaryReader
@@ -109,6 +125,7 @@ Public Class Main
 
         ASNToOwnerDataFileReader.Close()
     End Sub
+
     Private Sub BuildOwnerToASNsTable()
         For Each i As Integer In ASNToOwner.Keys()
             Dim owner1 As String = ASNToOwner.Item(i)
