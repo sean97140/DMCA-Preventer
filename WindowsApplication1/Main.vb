@@ -71,11 +71,11 @@ Public Class Main
         'MsgBox(appData + "\" + ipRangeToASNDataFile)
 
         Try
-            ipRangeBinaryReader = New BinaryReader(System.IO.File.OpenRead(installPath + "\" + ipRangeToASNDataFile))
+            ipRangeBinaryReader = New BinaryReader(System.IO.File.OpenRead(ipRangeToASNDataFile))
         Catch ex As Exception
             MsgBox("No ASN data file found, please wait while it is downloaded. File size 10mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-raw-table", "data-raw-table.txt")
-            ipRangeBinaryReader = New BinaryReader(System.IO.File.OpenRead(installPath + "\" + ipRangeToASNDataFile))
+            ipRangeBinaryReader = New BinaryReader(System.IO.File.OpenRead(ipRangeToASNDataFile))
         End Try
 
         Dim ipRangeBinaryData As Byte() = ipRangeBinaryReader.ReadBytes(ipRangeBinaryReader.BaseStream.Length)
@@ -102,7 +102,7 @@ Public Class Main
         Dim installPath As String = appData + "\DMCA Preventer"
 
         Try
-            asnOwnerBinaryReader = New BinaryReader(System.IO.File.OpenRead(installPath + "\" + ASNToOwnerDataFile))
+            asnOwnerBinaryReader = New BinaryReader(System.IO.File.OpenRead(ASNToOwnerDataFile))
         Catch ex As Exception
             MsgBox("No ASN to Owner data file found, please wait while it is downloaded. File size 2mb")
             My.Computer.Network.DownloadFile("http://thyme.apnic.net/current/data-used-autnums", "data-used-autnums.txt")
